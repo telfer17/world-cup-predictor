@@ -90,13 +90,17 @@ export default function EnterForm() {
         <input
           id="phone"
           type="tel"
+          inputMode="numeric"
           required
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) =>
+            // Digits only, capped at 11.
+            setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))
+          }
           className="mt-1 w-full rounded-md border border-gray-300 p-2"
         />
         <p className="mt-1 text-sm text-gray-500">
-          So the club can reach you about your entry.
+          11-digit UK mobile, e.g. 07123456789
         </p>
       </div>
 
