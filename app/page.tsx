@@ -4,7 +4,10 @@ import Countdown from "@/components/Countdown";
 
 const scoring = [
   { pts: 5, rule: "Exact score" },
-  { pts: 3, rule: "Correct result plus one team's goals" },
+  {
+    pts: 3,
+    rule: "Correct result plus winning team's goals (ie. you predict 3-0, but game finishes 3-1)",
+  },
   { pts: 2, rule: "Correct result only" },
   { pts: 0, rule: "Anything else" },
 ];
@@ -43,7 +46,10 @@ export default function Home() {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="scroll-mt-20 border-t border-gray-200 py-16">
+      <section
+        id="how-it-works"
+        className="scroll-mt-20 border-t border-gray-200 py-16"
+      >
         <h2 className="text-2xl font-bold">How it works</h2>
 
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
@@ -85,10 +91,45 @@ export default function Home() {
           </div>
         </div>
 
-        <p className="mt-6 text-sm text-gray-500">
-          <span className="font-semibold">How to pay:</span> bank details to
-          follow.
-        </p>
+        <div className="mt-6 rounded-md border border-gray-200 p-5">
+          <h3 className="font-semibold">How to pay</h3>
+          <p className="mt-2 text-sm text-gray-600">
+            £10 per entry. Pay by bank transfer, or hand cash to the club member
+            you entered through.
+          </p>
+          <dl className="mt-3 space-y-1 text-sm text-gray-600">
+            <div className="flex gap-2">
+              <dt className="w-36 shrink-0 font-semibold text-gray-900">
+                Account name
+              </dt>
+              <dd>Glasgow Wellington Football Club Limited</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-36 shrink-0 font-semibold text-gray-900">
+                Bank
+              </dt>
+              <dd>Co-operative Bank</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-36 shrink-0 font-semibold text-gray-900">
+                Sort code
+              </dt>
+              <dd>08-92-50</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-36 shrink-0 font-semibold text-gray-900">
+                Account number
+              </dt>
+              <dd>63295276</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="w-36 shrink-0 font-semibold text-gray-900">
+                Reference
+              </dt>
+              <dd>use your entry name, so we can match your payment.</dd>
+            </div>
+          </dl>
+        </div>
       </section>
     </main>
   );

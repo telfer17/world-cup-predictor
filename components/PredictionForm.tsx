@@ -24,7 +24,7 @@ export type Prediction = {
   away_pred: number;
 };
 
-type SaveState = "idle" | "saving" | "saved" | "error";
+type SaveState = "idle" | "saving" | "saved" | "error" | "empty";
 
 // All kickoff times are displayed in UK time.
 const dateFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -67,6 +67,17 @@ export default function PredictionForm({
     }
   );
   const [saveState, setSaveState] = useState<SaveState>("idle");
+  // Count saved at the moment of a successful save, so the confirmation
+  // doesn't drift if the user keeps typing afterwards.
+  const [savedCount, setSavedCount] = useState(0);
+
+  const completed = useMemo(
+    () =>
+      Object.values(scores).filter((s) => s.home !== "" && s.away !== "")
+        .length,
+    [scores]
+  );
+  const total = matches.length;
 
   const days = useMemo(() => {
     const sorted = [...matches].sort(
@@ -108,7 +119,10 @@ export default function PredictionForm({
         away_pred: Number(s.away),
       }));
 
-    if (predictions.length === 0) return;
+    if (predictions.length === 0) {
+      setSaveState("empty");
+      return;
+    }
 
     setSaveState("saving");
     try {
@@ -117,7 +131,12 @@ export default function PredictionForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ participantId: participant.id, predictions }),
       });
-      setSaveState(res.ok ? "saved" : "error");
+      if (res.ok) {
+        setSavedCount(predictions.length);
+        setSaveState("saved");
+      } else {
+        setSaveState("error");
+      }
     } catch {
       setSaveState("error");
     }
@@ -181,18 +200,33 @@ export default function PredictionForm({
           <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
             <span className="text-sm text-gray-500">
               {saveState === "saving" && "Saving…"}
-              {saveState === "saved" && "Saved ✓"}
+              {saveState === "saved" && (
+                <span className="font-medium text-green-700">
+                  Saved — {savedCount} of {total} predicted. Blank matches
+                  score 0.
+                </span>
+              )}
               {saveState === "error" && (
                 <span className="text-red-600">Save failed — try again.</span>
               )}
+              {saveState === "empty" && (
+                <span className="text-amber-700">
+                  Enter at least one score before saving.
+                </span>
+              )}
             </span>
-            <button
-              onClick={save}
-              disabled={saveState === "saving"}
-              className="rounded-md bg-blue-600 px-5 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
-            >
-              Save predictions
-            </button>
+            <div className="flex shrink-0 items-center gap-3">
+              <span className="text-sm tabular-nums text-gray-500">
+                {completed} of {total} predicted
+              </span>
+              <button
+                onClick={save}
+                disabled={saveState === "saving"}
+                className="rounded-md bg-blue-600 px-5 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+              >
+                Save predictions
+              </button>
+            </div>
           </div>
         </div>
       )}
