@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
 
 type LeaderboardRow = {
-  id: string;
   name: string;
   points: number;
   exact_scores: number;
@@ -101,7 +100,7 @@ export default function LeaderboardTable() {
           <tbody>
             {rows.map((row, i) => (
               <tr
-                key={row.id}
+                key={i}
                 className={`border-b border-gray-200 ${
                   i < 3 ? "bg-amber-50 font-medium" : ""
                 }`}
