@@ -27,19 +27,30 @@ export default function LeaderboardTable() {
 
   useEffect(() => {
     let cancelled = false;
+    let inFlight = false;
 
     async function load() {
-      const { data, error } = await supabaseBrowser
-        .from("leaderboard")
-        .select("*");
-      if (cancelled) return;
-      if (error) {
-        setFailed(true);
-        return;
+      if (inFlight || cancelled) return;
+      inFlight = true;
+      try {
+        const { data, error } = await supabaseBrowser
+          .from("leaderboard")
+          .select("*")
+          .order("points", { ascending: false })
+          .order("exact_scores", { ascending: false })
+          .order("name")
+          .returns<LeaderboardRow[]>();
+        if (cancelled) return;
+        if (error) {
+          setFailed(true);
+          return;
+        }
+        setRows(data);
+        setUpdatedAt(new Date());
+        setFailed(false);
+      } finally {
+        inFlight = false;
       }
-      setRows(data as LeaderboardRow[]);
-      setUpdatedAt(new Date());
-      setFailed(false);
     }
 
     load();
