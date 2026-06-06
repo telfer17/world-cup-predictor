@@ -58,6 +58,30 @@ export default function Home() {
             <p className="mt-2 text-sm text-gray-600">
               £5 goes into the prize pot, £5 goes to the club.
             </p>
+            <h4 className="mt-4 font-semibold">Prizes (top 3)</h4>
+            <ul className="mt-2 space-y-1 text-sm text-gray-600">
+              <li className="flex gap-2">
+                <span className="w-10 shrink-0 font-semibold text-gray-900">
+                  1st
+                </span>
+                60% of the prize pot
+              </li>
+              <li className="flex gap-2">
+                <span className="w-10 shrink-0 font-semibold text-gray-900">
+                  2nd
+                </span>
+                30% of the prize pot
+              </li>
+              <li className="flex gap-2">
+                <span className="w-10 shrink-0 font-semibold text-gray-900">
+                  3rd
+                </span>
+                10% of the prize pot
+              </li>
+            </ul>
+            <p className="mt-2 text-sm text-gray-500">
+              Final prize amounts confirmed once all entries are in.
+            </p>
           </div>
 
           <div className="rounded-md border border-gray-200 p-5">
