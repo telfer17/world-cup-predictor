@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Countdown from "@/components/Countdown";
+import FindEntryButton from "@/components/FindEntryButton";
 
 const scoring = [
   { pts: 5, rule: "Exact score" },
@@ -32,12 +33,19 @@ export default function Home() {
           Predict all 72 World Cup group-stage scores. £10 to enter — half the
           prize pot, half to the club.
         </p>
-        <Link
-          href="/enter"
-          className="mt-8 inline-block rounded-md bg-blue-600 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-700"
-        >
-          Enter now
-        </Link>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          <Link
+            href="/enter"
+            className="rounded-md bg-blue-600 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-700"
+          >
+            Enter now
+          </Link>
+          <FindEntryButton />
+        </div>
+        <p className="mt-3 text-sm text-gray-500">
+          Already entered? Use your phone number to get back to your
+          predictions.
+        </p>
       </section>
 
       {/* Countdown */}
