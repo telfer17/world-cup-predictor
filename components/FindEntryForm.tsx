@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -8,6 +8,15 @@ type Entry = { id: string; name: string };
 
 export default function FindEntryForm() {
   const router = useRouter();
+  const navTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Clear any pending recovery timeout when navigation succeeds (unmount).
+  useEffect(
+    () => () => {
+      if (navTimeout.current) clearTimeout(navTimeout.current);
+    },
+    []
+  );
   const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +48,9 @@ export default function FindEntryForm() {
         return;
       }
       if (found.length === 1) {
-        // Leave the button disabled while navigating.
+        // Leave the button disabled while navigating, but recover if the
+        // navigation stalls so the user isn't stuck on a dead button.
+        navTimeout.current = setTimeout(() => setSubmitting(false), 5_000);
         router.push(`/predict/${found[0].id}`);
         return;
       }
@@ -62,6 +73,8 @@ export default function FindEntryForm() {
           type="tel"
           inputMode="numeric"
           required
+          pattern="0[0-9]{10}"
+          title="11-digit UK number starting with 0"
           value={phone}
           onChange={(e) =>
             // Digits only, capped at 11 — same as the Enter form.

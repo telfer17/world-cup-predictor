@@ -92,6 +92,8 @@ export default function EnterForm() {
           type="tel"
           inputMode="numeric"
           required
+          pattern="0[0-9]{10}"
+          title="11-digit UK number starting with 0"
           value={phone}
           onChange={(e) =>
             // Digits only, capped at 11.
