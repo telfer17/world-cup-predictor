@@ -1,6 +1,5 @@
+import { DEADLINE } from "@/lib/constants";
 import { supabaseServer } from "@/lib/supabase-server";
-
-const DEADLINE = new Date("2026-06-11T19:00:00Z");
 
 type IncomingPrediction = {
   match_id: number;
@@ -38,10 +37,12 @@ export async function POST(request: Request) {
       !Number.isInteger(p?.home_pred) ||
       !Number.isInteger(p?.away_pred) ||
       p.home_pred < 0 ||
-      p.away_pred < 0
+      p.home_pred > 99 ||
+      p.away_pred < 0 ||
+      p.away_pred > 99
     ) {
       return Response.json(
-        { error: "Each prediction needs an integer match_id and non-negative integer scores." },
+        { error: "Each prediction needs an integer match_id and integer scores between 0 and 99." },
         { status: 400 }
       );
     }
@@ -59,7 +60,8 @@ export async function POST(request: Request) {
     .upsert(rows, { onConflict: "participant_id,match_id" });
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    console.error("predictions upsert failed:", error);
+    return Response.json({ error: "Failed to save predictions." }, { status: 500 });
   }
 
   return Response.json({ saved: rows.length });

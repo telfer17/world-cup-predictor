@@ -57,7 +57,8 @@ export default function Home() {
           <div className="rounded-md border border-gray-200 p-5">
             <h3 className="font-semibold">Predict every game</h3>
             <p className="mt-2 text-sm text-gray-600">
-              Predict the exact score of all 72 group games before 11 June.
+              Predict the exact score of all 72 group games before the first
+              kick-off at 20:00 UK time on 11 June.
             </p>
           </div>
 

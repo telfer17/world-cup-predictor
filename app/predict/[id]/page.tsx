@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { DEADLINE } from "@/lib/constants";
 import { supabaseServer } from "@/lib/supabase-server";
 import PredictionForm, {
   type Match,
@@ -8,8 +9,6 @@ import PredictionForm, {
 
 // Data is per-participant and time-sensitive — always render at request time.
 export const dynamic = "force-dynamic";
-
-const DEADLINE = new Date("2026-06-11T19:00:00Z");
 
 export default async function PredictPage({
   params,

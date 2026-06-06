@@ -1,8 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-
-const KICKOFF = new Date("2026-06-11T19:00:00Z");
+import { DEADLINE } from "@/lib/constants";
 
 // Tiny external "current time" store, ticking once a second. The server
 // snapshot is null so SSR renders a placeholder and the real values fill
@@ -37,7 +36,7 @@ const kickoffFormatter = new Intl.DateTimeFormat("en-GB", {
 });
 
 function remainingParts(now: number) {
-  const ms = Math.max(0, KICKOFF.getTime() - now);
+  const ms = Math.max(0, DEADLINE.getTime() - now);
   const minutes = Math.floor(ms / 60_000);
   return {
     days: Math.floor(minutes / (60 * 24)),
@@ -75,7 +74,7 @@ export default function Countdown() {
       </div>
       <p className="mt-3 text-sm text-gray-500">
         Entries lock at the first kick-off —{" "}
-        {kickoffFormatter.format(KICKOFF)} UK time.
+        {kickoffFormatter.format(DEADLINE)} UK time.
       </p>
     </div>
   );
