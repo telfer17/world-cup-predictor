@@ -1,65 +1,95 @@
 import Image from "next/image";
+import Link from "next/link";
+import Countdown from "@/components/Countdown";
+
+const scoring = [
+  { pts: 5, rule: "Exact score" },
+  { pts: 3, rule: "Correct result plus one team's goals" },
+  { pts: 2, rule: "Correct result only" },
+  { pts: 0, rule: "Anything else" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+    <main className="mx-auto max-w-4xl px-4">
+      {/* Hero */}
+      <section className="py-16 text-center">
         <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          src="/wellington.jpg"
+          alt="Glasgow Wellington logo"
+          width={160}
+          height={160}
           priority
+          className="mx-auto rounded-full"
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
+          Glasgow Wellington · World Cup 2026 Predictor
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          Predict all 72 World Cup group-stage scores. £10 to enter — half the
+          prize pot, half to the club.
+        </p>
+        <Link
+          href="/enter"
+          className="mt-8 inline-block rounded-md bg-blue-600 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-700"
+        >
+          Enter now
+        </Link>
+      </section>
+
+      {/* Countdown */}
+      <section className="pb-16">
+        <Countdown />
+      </section>
+
+      {/* How it works */}
+      <section id="how-it-works" className="scroll-mt-20 border-t border-gray-200 py-16">
+        <h2 className="text-2xl font-bold">How it works</h2>
+
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">£10 entry</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              £5 goes into the prize pot, £5 goes to the club.
+            </p>
+          </div>
+
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">Predict every game</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Predict the exact score of all 72 group games before the first
+              kick-off at 20:00 UK time on 11 June.
+            </p>
+          </div>
+
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">Scoring</h3>
+            <ul className="mt-2 space-y-1 text-sm text-gray-600">
+              {scoring.map((s) => (
+                <li key={s.pts} className="flex gap-2">
+                  <span className="w-10 shrink-0 font-semibold text-gray-900">
+                    {s.pts} pts
+                  </span>
+                  {s.rule}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">Edit until kick-off</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Change your predictions as often as you like until the first
+              kick-off on 11 June — then everything locks.
+            </p>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+
+        <p className="mt-6 text-sm text-gray-500">
+          <span className="font-semibold">How to pay:</span> bank details to
+          follow.
+        </p>
+      </section>
+    </main>
   );
 }
