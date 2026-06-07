@@ -21,6 +21,7 @@ const updatedFormatter = new Intl.DateTimeFormat("en-GB", {
 export default function LeaderboardTable() {
   // null = first fetch not finished yet (loading state).
   const [rows, setRows] = useState<LeaderboardRow[] | null>(null);
+  const [hasResults, setHasResults] = useState(false);
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [failed, setFailed] = useState(false);
 
@@ -32,19 +33,27 @@ export default function LeaderboardTable() {
       if (inFlight || cancelled) return;
       inFlight = true;
       try {
-        const { data, error } = await supabaseBrowser
-          .from("leaderboard")
-          .select("*")
-          .order("points", { ascending: false })
-          .order("exact_scores", { ascending: false })
-          .order("name")
-          .returns<LeaderboardRow[]>();
+        const [board, firstResult] = await Promise.all([
+          supabaseBrowser
+            .from("leaderboard")
+            .select("*")
+            .order("points", { ascending: false })
+            .order("exact_scores", { ascending: false })
+            .order("name")
+            .returns<LeaderboardRow[]>(),
+          supabaseBrowser
+            .from("matches")
+            .select("id")
+            .not("home_score", "is", null)
+            .limit(1),
+        ]);
         if (cancelled) return;
-        if (error) {
+        if (board.error || firstResult.error) {
           setFailed(true);
           return;
         }
-        setRows(data);
+        setRows(board.data);
+        setHasResults(firstResult.data.length > 0);
         setUpdatedAt(new Date());
         setFailed(false);
       } finally {
@@ -66,6 +75,16 @@ export default function LeaderboardTable() {
         {failed
           ? "Couldn't load the leaderboard — retrying shortly."
           : "Loading the leaderboard…"}
+      </p>
+    );
+  }
+
+  if (!hasResults) {
+    return (
+      <p className="mt-8 rounded-md border border-gray-200 p-6 text-center text-gray-500">
+        The leaderboard goes live once the first game&apos;s result is in.
+        Predictions lock at the first kick-off — Thursday 11 June, 20:00 UK
+        time.
       </p>
     );
   }
