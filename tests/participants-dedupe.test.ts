@@ -91,6 +91,23 @@ describe("duplicate entry protection", () => {
     expect(insert).toHaveBeenCalledOnce();
   });
 
+  it("returns 500 when the lookup query fails", async () => {
+    lookupEq.mockResolvedValue({
+      data: null,
+      error: { message: "connection refused" },
+    });
+    const res = await POST(
+      request({
+        name: "John Smith",
+        club_contact: "Dave Jones",
+        phone: "07123456789",
+      })
+    );
+    expect(res.status).toBe(500);
+    expect(await res.json()).toEqual({ error: "Failed to create entry." });
+    expect(insert).not.toHaveBeenCalled();
+  });
+
   it("inserts when only the club contact differs", async () => {
     lookupEq.mockResolvedValue({ data: [existingRow], error: null });
     const res = await POST(

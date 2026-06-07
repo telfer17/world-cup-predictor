@@ -170,7 +170,7 @@ export default function PredictionForm({
       {showReturnHints && (
         <p className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
           Your predictions are saved when you tap Save — you don&apos;t have to
-          do all 72 at once. To come back later, go to the homepage, tap
+          do all {total} at once. To come back later, go to the homepage, tap
           &quot;Edit my entry&quot; and enter your phone number to pick up
           where you left off.
         </p>
@@ -232,7 +232,7 @@ export default function PredictionForm({
           {showReturnHints && (
             <p className="mx-auto max-w-2xl pb-2 text-xs text-gray-500">
               Your predictions are saved when you tap Save — you don&apos;t
-              have to do all 72 at once. To come back later, go to the
+              have to do all {total} at once. To come back later, go to the
               homepage, tap &quot;Edit my entry&quot; and enter your phone
               number to pick up where you left off.
             </p>
