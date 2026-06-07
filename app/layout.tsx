@@ -16,9 +16,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://world-cup-predictor-flax.vercel.app"),
   title: "Glasgow Wellington · World Cup 2026 Predictor",
   description:
     "Predict all 72 World Cup 2026 group-stage scores. £10 to enter — half the prize pot, half to the club.",
+  openGraph: {
+    title: "Glasgow Wellington · World Cup 2026 Predictor",
+    description:
+      "Predict all 72 World Cup 2026 group-stage scores. £10 to enter — half the prize pot, half to the club.",
+    url: "/",
+    siteName: "Glasgow Wellington · World Cup 2026 Predictor",
+    type: "website",
+    images: [{ url: "/wellington.jpg", alt: "Glasgow Wellington crest" }],
+  },
+  twitter: {
+    card: "summary",
+    images: ["/wellington.jpg"],
+  },
 };
 
 export default function RootLayout({
