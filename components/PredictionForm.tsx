@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { TeamLabel } from "@/components/TeamFlag";
 
 export type Participant = {
@@ -62,6 +63,9 @@ export default function PredictionForm({
   forceEditable = false,
 }: Props) {
   const locked = forceEditable ? false : lockedProp;
+  // Leave-and-return hints are for the public editable flow only — the
+  // admin paper-entry screen and the read-only state stay as they are.
+  const showReturnHints = !forceEditable && !locked;
   const [scores, setScores] = useState<Record<number, { home: string; away: string }>>(
     () => {
       const initial: Record<number, { home: string; away: string }> = {};
@@ -152,10 +156,25 @@ export default function PredictionForm({
 
   return (
     <main className="mx-auto max-w-2xl px-4 pb-24 pt-8">
-      <h1 className="text-2xl font-bold">{participant.name}&apos;s predictions</h1>
+      {showReturnHints && (
+        <Link href="/" className="text-sm text-blue-600 hover:underline">
+          ← Back to home
+        </Link>
+      )}
+      <h1 className="mt-2 text-2xl font-bold">
+        {participant.name}&apos;s predictions
+      </h1>
       <p className="mt-1 text-sm text-gray-500">
         Group stage — predict every match before the deadline.
       </p>
+      {showReturnHints && (
+        <p className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
+          Your predictions are saved when you tap Save — you don&apos;t have to
+          do all 72 at once. To come back later, go to the homepage, tap
+          &quot;Edit my entry&quot; and enter your phone number to pick up
+          where you left off.
+        </p>
+      )}
 
       {locked && (
         <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
@@ -210,13 +229,23 @@ export default function PredictionForm({
 
       {!locked && (
         <div className="fixed inset-x-0 bottom-0 border-t border-gray-200 bg-white/95 p-3 backdrop-blur">
+          {showReturnHints && (
+            <p className="mx-auto max-w-2xl pb-2 text-xs text-gray-500">
+              Your predictions are saved when you tap Save — you don&apos;t
+              have to do all 72 at once. To come back later, go to the
+              homepage, tap &quot;Edit my entry&quot; and enter your phone
+              number to pick up where you left off.
+            </p>
+          )}
           <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
             <span className="text-sm text-gray-500">
               {saveState === "saving" && "Saving…"}
               {saveState === "saved" && (
                 <span className="font-medium text-green-700">
-                  Saved — {savedCount} of {total} predicted. Blank matches
+                  Saved ✓ — {savedCount} of {total} predicted. Blank matches
                   score 0.
+                  {showReturnHints &&
+                    " You can close this and come back any time before the deadline via “Edit my entry”."}
                 </span>
               )}
               {saveState === "error" && (

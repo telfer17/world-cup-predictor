@@ -37,6 +37,30 @@ export async function POST(request: Request) {
     );
   }
 
+  // Accidental re-submits (or a return trip through /enter) shouldn't make
+  // duplicates: if the same phone + name + club contact already exists,
+  // hand back the existing entry so the redirect lands on their own
+  // predictions. A deliberate second entry uses a different name, e.g.
+  // "John Smith (2)", per the multi-entry guidance on the form.
+  const { data: existing, error: lookupError } = await supabaseServer
+    .from("participants")
+    .select("id, name, club_contact")
+    .eq("phone", phone);
+
+  if (lookupError) {
+    console.error("participant lookup failed:", lookupError);
+    return Response.json({ error: "Failed to create entry." }, { status: 500 });
+  }
+
+  const duplicate = (existing ?? []).find(
+    (p) =>
+      (p.name ?? "").trim().toLowerCase() === name.toLowerCase() &&
+      (p.club_contact ?? "").trim().toLowerCase() === clubContact.toLowerCase()
+  );
+  if (duplicate) {
+    return Response.json({ id: duplicate.id });
+  }
+
   const { data, error } = await supabaseServer
     .from("participants")
     .insert({ name, club_contact: clubContact, phone })
