@@ -237,7 +237,7 @@ export default function PredictionForm({
               number to pick up where you left off.
             </p>
           )}
-          <div className="mx-auto flex max-w-2xl items-center justify-between gap-3">
+          <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-x-3 gap-y-2">
             <span className="text-sm text-gray-500">
               {saveState === "saving" && "Saving…"}
               {saveState === "saved" && (
@@ -257,10 +257,18 @@ export default function PredictionForm({
                 </span>
               )}
             </span>
-            <div className="flex shrink-0 items-center gap-3">
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <span className="text-sm tabular-nums text-gray-500">
                 {completed} of {total} predicted
               </span>
+              {showReturnHints && (
+                <Link
+                  href="/"
+                  className="rounded-md border border-gray-300 px-5 py-2 font-semibold text-gray-700 hover:bg-gray-100"
+                >
+                  Back to home
+                </Link>
+              )}
               <button
                 onClick={save}
                 disabled={saveState === "saving"}
