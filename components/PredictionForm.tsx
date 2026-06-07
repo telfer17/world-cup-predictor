@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import TeamFlag from "@/components/TeamFlag";
 
 export type Participant = {
   id: string;
@@ -175,7 +176,10 @@ export default function PredictionForm({
                   {timeFormatter.format(new Date(match.kickoff))}
                 </span>
                 <span className="w-16 text-xs text-gray-400">Group {match.grp}</span>
-                <span className="text-right text-sm font-medium">{match.home}</span>
+                <span className="text-right text-sm font-medium">
+                  {match.home}
+                  <TeamFlag team={match.home} />
+                </span>
                 <input
                   type="text"
                   inputMode="numeric"
@@ -195,7 +199,10 @@ export default function PredictionForm({
                   aria-label={`${match.away} score`}
                   className="w-12 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100 disabled:text-gray-400"
                 />
-                <span className="text-sm font-medium">{match.away}</span>
+                <span className="text-sm font-medium">
+                  <TeamFlag team={match.away} />
+                  {match.away}
+                </span>
               </div>
             ))}
           </div>
