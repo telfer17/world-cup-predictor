@@ -60,6 +60,41 @@ export default function Home() {
       >
         <h2 className="text-2xl font-bold">How it works</h2>
 
+        <h3 className="mt-6 text-lg font-semibold">Two ways to enter</h3>
+        <div className="mt-3 grid gap-6 sm:grid-cols-2">
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">Enter online</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Hit Enter, add your details, and fill in your score predictions
+              for all 72 group games before the first kick-off.
+            </p>
+            <Link
+              href="/enter"
+              className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+            >
+              Enter now
+            </Link>
+          </div>
+
+          <div className="rounded-md border border-gray-200 p-5">
+            <h3 className="font-semibold">Enter on paper</h3>
+            <p className="mt-2 text-sm text-gray-600">
+              Download the prediction sheet, fill it in on your phone or
+              computer, or print it and write on it by hand. Then send a photo
+              of your completed sheet to your club contact, who&apos;ll pass it
+              on to be added to the leaderboard for you.
+            </p>
+            <a
+              href="/prediction-sheet.pdf"
+              target="_blank"
+              download
+              className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+            >
+              Download the prediction sheet (PDF)
+            </a>
+          </div>
+        </div>
+
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <div className="rounded-md border border-gray-200 p-5">
             <h3 className="font-semibold">£10 entry</h3>
