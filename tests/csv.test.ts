@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toCsv } from "@/lib/csv";
+import { csvSafeText, toCsv } from "@/lib/csv";
 
 describe("toCsv", () => {
   it("writes a header row and plain values unquoted", () => {
@@ -28,5 +28,20 @@ describe("toCsv", () => {
 
   it("renders numbers and booleans", () => {
     expect(toCsv(["n", "b"], [[72, true]])).toBe("n,b\r\n72,true");
+  });
+});
+
+describe("csvSafeText", () => {
+  it("neutralises spreadsheet formula triggers with a leading quote", () => {
+    expect(csvSafeText("=1+1")).toBe("'=1+1");
+    expect(csvSafeText("+SUM(A1)")).toBe("'+SUM(A1)");
+    expect(csvSafeText("-2")).toBe("'-2");
+    expect(csvSafeText("@cmd")).toBe("'@cmd");
+  });
+
+  it("leaves ordinary text and empty values untouched", () => {
+    expect(csvSafeText("John Smith")).toBe("John Smith");
+    expect(csvSafeText(null)).toBe("");
+    expect(csvSafeText("")).toBe("");
   });
 });

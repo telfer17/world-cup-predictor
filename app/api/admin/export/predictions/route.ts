@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/admin-auth";
-import { toCsv } from "@/lib/csv";
+import { csvSafeText, toCsv } from "@/lib/csv";
 import { supabaseServer } from "@/lib/supabase-server";
 
 // YYYY-MM-DD in UK time, used for both the filename and each match_date.
@@ -92,8 +92,8 @@ export async function GET() {
         name: entrant.name,
         kickoff: match.kickoff,
         cells: [
-          entrant.name,
-          entrant.club_contact,
+          csvSafeText(entrant.name),
+          csvSafeText(entrant.club_contact),
           phoneCell(entrant.phone),
           ukDate.format(new Date(match.kickoff)),
           match.home,
@@ -128,6 +128,7 @@ export async function GET() {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="glasgow-wellington-predictions-${ukDate.format(new Date())}.csv"`,
+      "Cache-Control": "no-store",
     },
   });
 }

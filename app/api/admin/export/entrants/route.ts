@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/admin-auth";
-import { toCsv } from "@/lib/csv";
+import { csvSafeText, toCsv } from "@/lib/csv";
 import { supabaseServer } from "@/lib/supabase-server";
 
 // YYYY-MM-DD in UK time, so a late-night export doesn't roll to the UTC date.
@@ -47,19 +47,25 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [{ data, error }, counts] = await Promise.all([
-    supabaseServer
-      .from("participants")
-      .select("id, name, club_contact, phone")
-      .returns<Participant[]>(),
-    tallyPredictionCounts(),
-  ]);
-  if (error) {
-    console.error("export entrants failed:", error);
+  let participants: Participant[];
+  let counts: Record<string, number>;
+  try {
+    const [res, c] = await Promise.all([
+      supabaseServer
+        .from("participants")
+        .select("id, name, club_contact, phone")
+        .returns<Participant[]>(),
+      tallyPredictionCounts(),
+    ]);
+    if (res.error) throw new Error(res.error.message);
+    participants = res.data ?? [];
+    counts = c;
+  } catch (e) {
+    console.error("export entrants failed:", e);
     return Response.json({ error: "Export failed." }, { status: 500 });
   }
 
-  const participants = (data ?? []).sort(
+  participants.sort(
     (a, b) =>
       (a.club_contact ?? "").localeCompare(b.club_contact ?? "") ||
       a.name.localeCompare(b.name)
@@ -68,8 +74,8 @@ export async function GET() {
   const csv = toCsv(
     ["name", "club_contact", "phone", "predictions"],
     participants.map((p) => [
-      p.name,
-      p.club_contact,
+      csvSafeText(p.name),
+      csvSafeText(p.club_contact),
       phoneCell(p.phone),
       counts[p.id] ?? 0,
     ])
@@ -79,6 +85,7 @@ export async function GET() {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": `attachment; filename="glasgow-wellington-entrants-${dateStamp.format(new Date())}.csv"`,
+      "Cache-Control": "no-store",
     },
   });
 }

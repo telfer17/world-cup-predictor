@@ -11,6 +11,17 @@ function escapeField(value: CsvValue): string {
   return s;
 }
 
+/**
+ * Neutralise spreadsheet formula injection from free-text, user-supplied
+ * fields: if a value starts with a formula trigger, prefix a single quote so
+ * Excel/Sheets treat it as text. Apply to user input (names, etc.) — NOT to
+ * fields we deliberately emit as formulas, like the phone `="0…"` cell.
+ */
+export function csvSafeText(value: string | null | undefined): string {
+  if (!value) return "";
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+}
+
 export function toCsv(headers: string[], rows: CsvValue[][]): string {
   const lines = [headers, ...rows].map((row) =>
     row.map(escapeField).join(",")
