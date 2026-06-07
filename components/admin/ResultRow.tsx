@@ -3,6 +3,7 @@
 import { useRef, useState, useTransition } from "react";
 import { setResult } from "@/app/admin/results/actions";
 import { validateResult } from "@/lib/admin-results";
+import TeamFlag from "@/components/TeamFlag";
 
 type Props = {
   matchId: number;
@@ -66,7 +67,10 @@ export default function ResultRow({
       <div className="grid grid-cols-[auto_auto_1fr_auto_auto_auto_1fr_auto_auto] items-center gap-2 p-3">
         <span className="text-sm tabular-nums text-gray-500">{time}</span>
         <span className="w-16 text-xs text-gray-400">Group {grp}</span>
-        <span className="text-right text-sm font-medium">{home}</span>
+        <span className="text-right text-sm font-medium">
+          {home}
+          <TeamFlag team={home} />
+        </span>
         <input
           type="text"
           inputMode="numeric"
@@ -86,7 +90,10 @@ export default function ResultRow({
           aria-label={`${away} score`}
           className="w-12 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100"
         />
-        <span className="text-sm font-medium">{away}</span>
+        <span className="text-sm font-medium">
+          <TeamFlag team={away} />
+          {away}
+        </span>
         <button
           type="button"
           disabled={!changed || pending}
