@@ -19,10 +19,12 @@ export async function setPaid(id: string, paid: boolean): Promise<void> {
 
 export async function markGroupPaid(clubContact: string): Promise<void> {
   await requireAdmin();
-  const { error } = await supabaseServer
-    .from("participants")
-    .update({ paid: true })
-    .eq("club_contact", clubContact);
+  // groupEntrants buckets NULL club_contact under "" — match that here.
+  const query = supabaseServer.from("participants").update({ paid: true });
+  const { error } =
+    clubContact === ""
+      ? await query.is("club_contact", null)
+      : await query.eq("club_contact", clubContact);
   if (error) {
     console.error("markGroupPaid failed:", error);
     throw new Error("Failed to mark group paid.");

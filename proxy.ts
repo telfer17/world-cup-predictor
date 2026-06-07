@@ -6,7 +6,7 @@ import { ADMIN_COOKIE, isValidSession } from "@/lib/admin-auth";
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin/login")) {
+  if (pathname === "/admin/login" || pathname === "/admin/login/") {
     return NextResponse.next();
   }
 

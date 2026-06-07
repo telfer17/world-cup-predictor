@@ -1,10 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { isValidSession, sessionToken } from "@/lib/admin-auth";
 
 const PASSWORD = "test-admin-password";
 
 beforeEach(() => {
   vi.stubEnv("ADMIN_PASSWORD", PASSWORD);
+});
+
+afterEach(() => {
+  vi.unstubAllEnvs();
 });
 
 describe("sessionToken", () => {

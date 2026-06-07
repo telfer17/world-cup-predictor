@@ -27,7 +27,10 @@ export default function AdminLoginPage() {
         </div>
 
         {state?.error && (
-          <p className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <p
+            role="alert"
+            className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+          >
             {state.error}
           </p>
         )}

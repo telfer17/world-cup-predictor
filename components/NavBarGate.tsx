@@ -9,6 +9,6 @@ export default function NavBarGate({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) return null;
   return <>{children}</>;
 }

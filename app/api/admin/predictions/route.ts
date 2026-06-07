@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
   // Accept participant_id (this route's contract) or participantId (what
   // the shared PredictionForm sends).
-  const participantId = body.participant_id ?? body.participantId;
+  const participantId = (body.participant_id ?? body.participantId)?.trim();
   const { predictions } = body;
 
   if (typeof participantId !== "string" || !participantId) {
