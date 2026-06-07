@@ -46,14 +46,21 @@ type Props = {
   matches: Match[];
   existing: Prediction[];
   locked: boolean;
+  /** Where Save POSTs. Defaults to the public route. */
+  endpoint?: string;
+  /** Admin paper-entry: keep the form editable regardless of the deadline. */
+  forceEditable?: boolean;
 };
 
 export default function PredictionForm({
   participant,
   matches,
   existing,
-  locked,
+  locked: lockedProp,
+  endpoint = "/api/predictions",
+  forceEditable = false,
 }: Props) {
+  const locked = forceEditable ? false : lockedProp;
   const [scores, setScores] = useState<Record<number, { home: string; away: string }>>(
     () => {
       const initial: Record<number, { home: string; away: string }> = {};
@@ -126,7 +133,7 @@ export default function PredictionForm({
 
     setSaveState("saving");
     try {
-      const res = await fetch("/api/predictions", {
+      const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ participantId: participant.id, predictions }),
