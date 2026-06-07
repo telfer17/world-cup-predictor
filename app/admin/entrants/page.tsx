@@ -76,6 +76,21 @@ export default async function EntrantsPage() {
         ))}
       </div>
 
+      <div className="mt-4 flex flex-wrap gap-2">
+        <a
+          href="/api/admin/export/entrants"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+        >
+          Export entrants (CSV)
+        </a>
+        <a
+          href="/api/admin/export/predictions"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100"
+        >
+          Export all predictions (CSV)
+        </a>
+      </div>
+
       {groups.length === 0 ? (
         <p className="mt-8 rounded-md border border-gray-200 p-6 text-center text-gray-500">
           No entrants yet.

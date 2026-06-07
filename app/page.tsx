@@ -30,8 +30,8 @@ export default function Home() {
           Glasgow Wellington · World Cup 2026 Predictor
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-          Predict all 72 World Cup group-stage scores. £10 to enter — half the
-          prize pot, half to the club.
+          Predict all 72 World Cup group-stage scores. £10 to enter — half to
+          the prize pot, half to the club.
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <Link
