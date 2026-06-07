@@ -10,7 +10,7 @@ const navLinks = [
 export default function NavBar() {
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-      <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-2">
+      <nav className="mx-auto flex max-w-4xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2">
         <Link href="/" className="flex items-center gap-2 font-bold tracking-tight">
           <Image
             src="/wellington.jpg"
@@ -21,12 +21,12 @@ export default function NavBar() {
           />
           World Cup 2026 Predictor
         </Link>
-        <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-5 gap-y-1 text-sm">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-gray-600 hover:text-gray-900"
+              className="py-1 text-gray-600 hover:text-gray-900"
             >
               {link.label}
             </Link>
@@ -35,7 +35,7 @@ export default function NavBar() {
             href="https://footyfees.co.uk"
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 opacity-70 hover:opacity-100"
+            className="hidden shrink-0 opacity-70 hover:opacity-100 md:flex"
           >
             <Image
               src="/footyfees2.png"
