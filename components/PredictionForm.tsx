@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import TeamFlag from "@/components/TeamFlag";
+import { TeamLabel } from "@/components/TeamFlag";
 
 export type Participant = {
   id: string;
@@ -168,41 +168,40 @@ export default function PredictionForm({
           <h2 className="mb-2 text-lg font-semibold">{date}</h2>
           <div className="divide-y divide-gray-200 rounded-md border border-gray-200">
             {dayMatches.map((match) => (
-              <div
-                key={match.id}
-                className="grid grid-cols-[auto_auto_1fr_auto_auto_auto_1fr] items-center gap-2 p-3"
-              >
-                <span className="text-sm tabular-nums text-gray-500">
-                  {timeFormatter.format(new Date(match.kickoff))}
-                </span>
-                <span className="w-16 text-xs text-gray-400">Group {match.grp}</span>
-                <span className="text-right text-sm font-medium">
-                  {match.home}
-                  <TeamFlag team={match.home} />
-                </span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  disabled={locked}
-                  value={scores[match.id]?.home ?? ""}
-                  onChange={(e) => setScore(match.id, "home", e.target.value)}
-                  aria-label={`${match.home} score`}
-                  className="w-12 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100 disabled:text-gray-400"
-                />
-                <span className="text-gray-400">–</span>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  disabled={locked}
-                  value={scores[match.id]?.away ?? ""}
-                  onChange={(e) => setScore(match.id, "away", e.target.value)}
-                  aria-label={`${match.away} score`}
-                  className="w-12 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100 disabled:text-gray-400"
-                />
-                <span className="text-sm font-medium">
-                  <TeamFlag team={match.away} />
-                  {match.away}
-                </span>
+              <div key={match.id} className="w-full p-3">
+                <div className="text-xs text-gray-400">
+                  <span className="tabular-nums">
+                    {timeFormatter.format(new Date(match.kickoff))}
+                  </span>{" "}
+                  · Group {match.grp}
+                </div>
+                <div className="mt-1 flex w-full items-center gap-2">
+                  <span className="min-w-0 flex-1 [overflow-wrap:anywhere] text-right text-sm font-medium">
+                    <TeamLabel team={match.home} flagSide="right" />
+                  </span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    disabled={locked}
+                    value={scores[match.id]?.home ?? ""}
+                    onChange={(e) => setScore(match.id, "home", e.target.value)}
+                    aria-label={`${match.home} score`}
+                    className="w-12 shrink-0 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100 disabled:text-gray-400"
+                  />
+                  <span className="shrink-0 text-gray-400">–</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    disabled={locked}
+                    value={scores[match.id]?.away ?? ""}
+                    onChange={(e) => setScore(match.id, "away", e.target.value)}
+                    aria-label={`${match.away} score`}
+                    className="w-12 shrink-0 rounded border border-gray-300 p-1 text-center disabled:bg-gray-100 disabled:text-gray-400"
+                  />
+                  <span className="min-w-0 flex-1 [overflow-wrap:anywhere] text-sm font-medium">
+                    <TeamLabel team={match.away} flagSide="left" />
+                  </span>
+                </div>
               </div>
             ))}
           </div>
