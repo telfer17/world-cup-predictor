@@ -27,11 +27,18 @@ export const metadata: Metadata = {
     url: "/",
     siteName: "Glasgow Wellington · World Cup 2026 Predictor",
     type: "website",
-    images: [{ url: "/wellington.jpg", alt: "Glasgow Wellington crest" }],
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Glasgow Wellington · World Cup 2026 Predictor",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
-    images: ["/wellington.jpg"],
+    card: "summary_large_image",
+    images: ["/og-image.png"],
   },
 };
 
