@@ -21,7 +21,7 @@ export default function NavBar() {
           />
           World Cup 2026 Predictor
         </Link>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-1 text-sm">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -31,6 +31,20 @@ export default function NavBar() {
               {link.label}
             </Link>
           ))}
+          <a
+            href="https://footyfees.co.uk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 opacity-70 hover:opacity-100"
+          >
+            <Image
+              src="/footyfees2.png"
+              alt="Footy Fees"
+              width={121}
+              height={20}
+              className="h-5 w-auto"
+            />
+          </a>
         </div>
       </nav>
     </header>
