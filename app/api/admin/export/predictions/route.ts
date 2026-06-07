@@ -15,8 +15,11 @@ type Participant = {
   name: string;
   club_contact: string | null;
   phone: string | null;
-  paid: boolean;
 };
+
+// Wrap the phone as an Excel/Sheets text formula so the leading 0 survives
+// (a bare "07…" gets read as a number and the 0 is dropped on open).
+const phoneCell = (phone: string | null) => (phone ? `="${phone}"` : "");
 
 type Match = {
   id: number;
@@ -62,7 +65,7 @@ export async function GET() {
     const [p, m, preds] = await Promise.all([
       supabaseServer
         .from("participants")
-        .select("id, name, club_contact, phone, paid")
+        .select("id, name, club_contact, phone")
         .returns<Participant[]>(),
       supabaseServer.from("matches").select("id, home, away, kickoff").returns<Match[]>(),
       allPredictions(),
@@ -91,8 +94,7 @@ export async function GET() {
         cells: [
           entrant.name,
           entrant.club_contact,
-          entrant.phone,
-          entrant.paid,
+          phoneCell(entrant.phone),
           ukDate.format(new Date(match.kickoff)),
           match.home,
           match.away,
@@ -113,7 +115,6 @@ export async function GET() {
       "entrant_name",
       "club_contact",
       "phone",
-      "paid",
       "match_date",
       "home_team",
       "away_team",

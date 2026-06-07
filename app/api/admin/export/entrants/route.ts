@@ -15,8 +15,11 @@ type Participant = {
   name: string;
   club_contact: string | null;
   phone: string | null;
-  paid: boolean;
 };
+
+// Wrap the phone as an Excel/Sheets text formula so the leading 0 survives
+// (a bare "07…" gets read as a number and the 0 is dropped on open).
+const phoneCell = (phone: string | null) => (phone ? `="${phone}"` : "");
 
 // Supabase caps a select at 1000 rows; predictions exceed that quickly,
 // so page through them when tallying per-participant counts.
@@ -47,7 +50,7 @@ export async function GET() {
   const [{ data, error }, counts] = await Promise.all([
     supabaseServer
       .from("participants")
-      .select("id, name, club_contact, phone, paid")
+      .select("id, name, club_contact, phone")
       .returns<Participant[]>(),
     tallyPredictionCounts(),
   ]);
@@ -63,12 +66,11 @@ export async function GET() {
   );
 
   const csv = toCsv(
-    ["name", "club_contact", "phone", "paid", "predictions"],
+    ["name", "club_contact", "phone", "predictions"],
     participants.map((p) => [
       p.name,
       p.club_contact,
-      p.phone,
-      p.paid,
+      phoneCell(p.phone),
       counts[p.id] ?? 0,
     ])
   );
