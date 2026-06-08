@@ -79,19 +79,28 @@ export default function Home() {
           <div className="rounded-md border border-gray-200 p-5">
             <h3 className="font-semibold">Enter on paper</h3>
             <p className="mt-2 text-sm text-gray-600">
-              Download the prediction sheet, fill it in on your phone or
-              computer, or print it and write on it by hand. Then send a photo
-              of your completed sheet to your club contact, who&apos;ll pass it
-              on to be added to the leaderboard for you.
+              Print the PDF and fill it in by hand, or fill in the Excel version
+              on a computer — then send your completed sheet to your club
+              contact, who&apos;ll pass it on to be added to the leaderboard for
+              you.
             </p>
-            <a
-              href="/prediction-sheet.pdf"
-              target="_blank"
-              download
-              className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
-            >
-              Download the prediction sheet (PDF)
-            </a>
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/prediction-sheet.pdf"
+                target="_blank"
+                download
+                className="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+              >
+                Download the prediction sheet (PDF)
+              </a>
+              <a
+                href="/prediction-sheet.xlsx"
+                download
+                className="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
+              >
+                Download as Excel (.xlsx)
+              </a>
+            </div>
           </div>
         </div>
 
