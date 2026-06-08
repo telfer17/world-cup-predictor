@@ -87,7 +87,6 @@ export default function Home() {
             <div className="mt-4 flex flex-wrap gap-3">
               <a
                 href="/prediction-sheet.pdf"
-                target="_blank"
                 download
                 className="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
               >
