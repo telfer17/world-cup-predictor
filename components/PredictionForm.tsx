@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { TeamLabel } from "@/components/TeamFlag";
 
@@ -83,6 +83,22 @@ export default function PredictionForm({
   // doesn't drift if the user keeps typing afterwards.
   const [savedCount, setSavedCount] = useState(0);
 
+  // The Save bar is position:fixed, so it overlaps the scroll content. Measure
+  // its height (it varies with the hint text, button wrapping and the iOS
+  // safe-area inset) and pad <main> by that much so the last fixture — match
+  // 72 — clears the bar and stays tappable.
+  const saveBarRef = useRef<HTMLDivElement>(null);
+  const [saveBarHeight, setSaveBarHeight] = useState(0);
+  useEffect(() => {
+    const el = saveBarRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver(() => {
+      setSaveBarHeight(el.getBoundingClientRect().height);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const completed = useMemo(
     () =>
       Object.values(scores).filter((s) => s.home !== "" && s.away !== "")
@@ -155,7 +171,16 @@ export default function PredictionForm({
   }
 
   return (
-    <main className="mx-auto max-w-2xl px-4 pb-24 pt-8">
+    <main
+      className="mx-auto max-w-2xl px-4 pb-24 pt-8"
+      // The fixed Save bar's measured height already includes its safe-area
+      // inset, so padding by it (+16px breathing room) clears the last fixture.
+      style={
+        !locked && saveBarHeight
+          ? { paddingBottom: `${saveBarHeight + 16}px` }
+          : undefined
+      }
+    >
       {showReturnHints && (
         <Link href="/" className="text-sm text-blue-600 hover:underline">
           ← Back to home
@@ -170,7 +195,7 @@ export default function PredictionForm({
       {showReturnHints && (
         <p className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
           Your predictions are saved when you tap Save — you don&apos;t have to
-          do all {total} at once. To come back later, go to the homepage, tap
+          do all {total}{" "}at once. To come back later, go to the homepage, tap
           &quot;Edit my entry&quot; and enter your phone number to pick up
           where you left off.
         </p>
@@ -228,11 +253,16 @@ export default function PredictionForm({
       ))}
 
       {!locked && (
-        <div className="fixed inset-x-0 bottom-0 border-t border-gray-200 bg-white/95 p-3 backdrop-blur">
+        <div
+          ref={saveBarRef}
+          className="fixed inset-x-0 bottom-0 border-t border-gray-200 bg-white/95 p-3 backdrop-blur"
+          // Respect the iOS home-indicator safe area so the buttons aren't clipped.
+          style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+        >
           {showReturnHints && (
             <p className="mx-auto max-w-2xl pb-2 text-xs text-gray-500">
               Your predictions are saved when you tap Save — you don&apos;t
-              have to do all {total} at once. To come back later, go to the
+              have to do all {total}{" "}at once. To come back later, go to the
               homepage, tap &quot;Edit my entry&quot; and enter your phone
               number to pick up where you left off.
             </p>
