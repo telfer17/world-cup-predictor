@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import FindEntryForm from "@/components/FindEntryForm";
 
 export const metadata = {
@@ -7,7 +8,11 @@ export const metadata = {
 
 export default function FindPage() {
   return (
-    <main className="mx-auto max-w-md px-4 py-12 text-center">
+    <main className="mx-auto max-w-md px-4 py-12">
+      <Link href="/" className="text-sm text-blue-600 hover:underline">
+        ← Back to home
+      </Link>
+      <div className="mt-2 text-center">
       <Image
         src="/wellington.jpg"
         alt="Glasgow Wellington logo"
@@ -22,6 +27,7 @@ export default function FindPage() {
         predictions.
       </p>
       <FindEntryForm />
+      </div>
     </main>
   );
 }

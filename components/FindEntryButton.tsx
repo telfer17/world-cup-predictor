@@ -1,27 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useSyncExternalStore } from "react";
-import { DEADLINE } from "@/lib/constants";
-
-// Re-check every minute; the snapshot is a boolean so renders only happen
-// when the lock state actually flips. Server snapshot is "not locked" —
-// after the deadline the client corrects itself right after hydration.
-function subscribe(onStoreChange: () => void) {
-  const timer = setInterval(onStoreChange, 60_000);
-  return () => clearInterval(timer);
-}
-
-function useLocked() {
-  return useSyncExternalStore(
-    subscribe,
-    () => Date.now() >= DEADLINE.getTime(),
-    () => false
-  );
-}
+import { useAfterDeadline } from "@/components/useDeadline";
 
 export default function FindEntryButton() {
-  const locked = useLocked();
+  const locked = useAfterDeadline();
   return (
     <Link
       href="/find"
