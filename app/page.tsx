@@ -1,7 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
-import Countdown from "@/components/Countdown";
-import FindEntryButton from "@/components/FindEntryButton";
+import HomeHero from "@/components/HomeHero";
+import EnterOptions from "@/components/EnterOptions";
 
 const scoring = [
   { pts: 5, rule: "Exact score" },
@@ -16,42 +14,7 @@ const scoring = [
 export default function Home() {
   return (
     <main className="mx-auto max-w-4xl px-4">
-      {/* Hero */}
-      <section className="py-16 text-center">
-        <Image
-          src="/wellington.jpg"
-          alt="Glasgow Wellington logo"
-          width={160}
-          height={160}
-          priority
-          className="mx-auto rounded-full"
-        />
-        <h1 className="mt-6 text-4xl font-bold tracking-tight sm:text-5xl">
-          Glasgow Wellington · World Cup 2026 Predictor
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-          Predict all 72 World Cup group-stage scores. £10 to enter — half to
-          the prize pot, half to the club.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link
-            href="/enter"
-            className="rounded-md bg-blue-600 px-8 py-3 text-lg font-semibold text-white hover:bg-blue-700"
-          >
-            Enter now
-          </Link>
-          <FindEntryButton />
-        </div>
-        <p className="mt-3 text-sm text-gray-500">
-          Already entered? Use your phone number to get back to your
-          predictions.
-        </p>
-      </section>
-
-      {/* Countdown */}
-      <section className="pb-16">
-        <Countdown />
-      </section>
+      <HomeHero />
 
       {/* How it works */}
       <section
@@ -60,48 +23,7 @@ export default function Home() {
       >
         <h2 className="text-2xl font-bold">How it works</h2>
 
-        <h3 className="mt-6 text-lg font-semibold">Two ways to enter</h3>
-        <div className="mt-3 grid gap-6 sm:grid-cols-2">
-          <div className="rounded-md border border-gray-200 p-5">
-            <h3 className="font-semibold">Enter online</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Hit Enter, add your details, and fill in your score predictions
-              for all 72 group games before the first kick-off.
-            </p>
-            <Link
-              href="/enter"
-              className="mt-4 inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
-            >
-              Enter now
-            </Link>
-          </div>
-
-          <div className="rounded-md border border-gray-200 p-5">
-            <h3 className="font-semibold">Enter on paper</h3>
-            <p className="mt-2 text-sm text-gray-600">
-              Print the PDF and fill it in by hand, or fill in the Excel version
-              on a computer — then send your completed sheet to your club
-              contact, who&apos;ll pass it on to be added to the leaderboard for
-              you.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href="/prediction-sheet.pdf"
-                download
-                className="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
-              >
-                Download the prediction sheet (PDF)
-              </a>
-              <a
-                href="/prediction-sheet.xlsx"
-                download
-                className="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white hover:bg-blue-700"
-              >
-                Download as Excel (.xlsx)
-              </a>
-            </div>
-          </div>
-        </div>
+        <EnterOptions />
 
         <div className="mt-6 grid gap-6 sm:grid-cols-2">
           <div className="rounded-md border border-gray-200 p-5">

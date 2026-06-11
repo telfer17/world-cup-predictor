@@ -1,11 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-const navLinks = [
-  { href: "/enter", label: "Enter" },
-  { href: "/leaderboard", label: "Leaderboard" },
-  { href: "/#how-it-works", label: "How it works" },
-];
+import NavLinks from "@/components/NavLinks";
 
 export default function NavBar() {
   return (
@@ -22,15 +17,7 @@ export default function NavBar() {
           World Cup 2026 Predictor
         </Link>
         <div className="flex min-w-0 flex-wrap items-center gap-x-5 gap-y-1 text-sm">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="py-1 text-gray-600 hover:text-gray-900"
-            >
-              {link.label}
-            </Link>
-          ))}
+          <NavLinks />
           <a
             href="https://footyfees.co.uk"
             target="_blank"

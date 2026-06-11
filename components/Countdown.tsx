@@ -1,29 +1,7 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import { DEADLINE } from "@/lib/constants";
-
-// Tiny external "current time" store, ticking once a second. The server
-// snapshot is null so SSR renders a placeholder and the real values fill
-// in on the client without a hydration mismatch.
-let nowSnapshot = Date.now();
-
-function subscribe(onStoreChange: () => void) {
-  nowSnapshot = Date.now();
-  const timer = setInterval(() => {
-    nowSnapshot = Date.now();
-    onStoreChange();
-  }, 1_000);
-  return () => clearInterval(timer);
-}
-
-function useNow() {
-  return useSyncExternalStore(
-    subscribe,
-    () => nowSnapshot,
-    () => null
-  );
-}
+import { useNow } from "@/components/useDeadline";
 
 const kickoffFormatter = new Intl.DateTimeFormat("en-GB", {
   timeZone: "Europe/London",
