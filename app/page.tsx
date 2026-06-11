@@ -16,6 +16,34 @@ export default function Home() {
     <main className="mx-auto max-w-4xl px-4">
       <HomeHero />
 
+      {/* Prize pot */}
+      <section className="pb-16">
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-6 text-center sm:p-8">
+          <h2 className="text-3xl font-bold tracking-tight text-blue-900 sm:text-4xl">
+            Prize pot: £265
+          </h2>
+          <div className="mx-auto mt-6 grid max-w-md grid-cols-3 gap-3">
+            {[
+              { place: "1st", amount: "£160" },
+              { place: "2nd", amount: "£80" },
+              { place: "3rd", amount: "£25" },
+            ].map((tier) => (
+              <div
+                key={tier.place}
+                className="rounded-md border border-blue-200 bg-white p-3"
+              >
+                <div className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                  {tier.place}
+                </div>
+                <div className="mt-1 text-xl font-bold tabular-nums text-gray-900 sm:text-2xl">
+                  {tier.amount}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How it works */}
       <section
         id="how-it-works"
@@ -37,23 +65,27 @@ export default function Home() {
                 <span className="w-10 shrink-0 font-semibold text-gray-900">
                   1st
                 </span>
-                60% of the prize pot
+                £160
               </li>
               <li className="flex gap-2">
                 <span className="w-10 shrink-0 font-semibold text-gray-900">
                   2nd
                 </span>
-                30% of the prize pot
+                £80
               </li>
               <li className="flex gap-2">
                 <span className="w-10 shrink-0 font-semibold text-gray-900">
                   3rd
                 </span>
-                10% of the prize pot
+                £25
               </li>
             </ul>
+            <p className="mt-2 text-sm text-gray-600">
+              Roughly a 60/30/10 split of the £265 pot, rounded to keep payouts
+              tidy.
+            </p>
             <p className="mt-2 text-sm text-gray-500">
-              Final prize amounts confirmed once all entries are in.
+              53 entries in — £530 collected, half of it (£265) the prize pot.
             </p>
           </div>
 
