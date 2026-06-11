@@ -107,37 +107,37 @@ export default function LeaderboardTable() {
           No entries on the board yet.
         </p>
       ) : (
-        <table className="mt-3 w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-gray-300 text-left text-xs uppercase tracking-wide text-gray-500">
-              <th className="py-2 pr-2 font-semibold">#</th>
-              <th className="py-2 pr-2 font-semibold">Name</th>
-              <th className="py-2 pr-2 text-right font-semibold">Points</th>
-              <th className="py-2 text-right font-semibold">Exact</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr
-                key={i}
-                className={`border-b border-gray-200 ${
-                  i < 3 ? "bg-amber-50 font-medium" : ""
-                }`}
-              >
-                <td className="py-2 pr-2 tabular-nums text-gray-500">
-                  {i + 1}
-                </td>
-                <td className="py-2 pr-2">{row.name}</td>
-                <td className="py-2 pr-2 text-right tabular-nums font-semibold">
-                  {row.points}
-                </td>
-                <td className="py-2 text-right tabular-nums text-gray-500">
-                  {row.exact_scores}
-                </td>
+        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200">
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-gray-300 text-left text-xs uppercase tracking-wide text-gray-500">
+                <th className="py-2 pl-3 pr-2 font-semibold sm:pl-4">#</th>
+                <th className="py-2 pr-2 font-semibold">Name</th>
+                <th className="py-2 pr-3 text-right font-semibold sm:pr-4">
+                  Points
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr
+                  key={i}
+                  className={`border-b border-gray-200 last:border-0 ${
+                    i < 3 ? "bg-amber-50 font-medium" : ""
+                  }`}
+                >
+                  <td className="py-2 pl-3 pr-2 tabular-nums text-gray-500 sm:pl-4">
+                    {i + 1}
+                  </td>
+                  <td className="py-2 pr-2">{row.name}</td>
+                  <td className="py-2 pr-3 text-right tabular-nums font-semibold sm:pr-4">
+                    {row.points}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
