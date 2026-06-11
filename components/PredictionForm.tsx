@@ -254,7 +254,7 @@ export default function PredictionForm({
                 {locked &&
                   match.home_score !== null &&
                   match.away_score !== null && (
-                    <div className="mt-1 text-center text-xs text-red-400">
+                    <div className="mt-1 text-center text-md font-semibold text-red-400">
                       {match.home_score}–{match.away_score}
                     </div>
                   )}
