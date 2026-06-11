@@ -52,6 +52,11 @@ type Props = {
   endpoint?: string;
   /** Admin paper-entry: keep the form editable regardless of the deadline. */
   forceEditable?: boolean;
+  /**
+   * This participant's running total from the leaderboard scoring view.
+   * Display-only, shown in the read-only view. null when unavailable.
+   */
+  totalPoints?: number | null;
 };
 
 export default function PredictionForm({
@@ -61,23 +66,24 @@ export default function PredictionForm({
   locked: lockedProp,
   endpoint = "/api/predictions",
   forceEditable = false,
+  totalPoints = null,
 }: Props) {
   const locked = forceEditable ? false : lockedProp;
   // Leave-and-return hints are for the public editable flow only — the
   // admin paper-entry screen and the read-only state stay as they are.
   const showReturnHints = !forceEditable && !locked;
-  const [scores, setScores] = useState<Record<number, { home: string; away: string }>>(
-    () => {
-      const initial: Record<number, { home: string; away: string }> = {};
-      for (const p of existing) {
-        initial[p.match_id] = {
-          home: String(p.home_pred),
-          away: String(p.away_pred),
-        };
-      }
-      return initial;
+  const [scores, setScores] = useState<
+    Record<number, { home: string; away: string }>
+  >(() => {
+    const initial: Record<number, { home: string; away: string }> = {};
+    for (const p of existing) {
+      initial[p.match_id] = {
+        home: String(p.home_pred),
+        away: String(p.away_pred),
+      };
     }
-  );
+    return initial;
+  });
   const [saveState, setSaveState] = useState<SaveState>("idle");
   // Count saved at the moment of a successful save, so the confirmation
   // doesn't drift if the user keeps typing afterwards.
@@ -103,7 +109,7 @@ export default function PredictionForm({
     () =>
       Object.values(scores).filter((s) => s.home !== "" && s.away !== "")
         .length,
-    [scores]
+    [scores],
   );
   const total = matches.length;
 
@@ -111,7 +117,7 @@ export default function PredictionForm({
     const sorted = [...matches].sort(
       (a, b) =>
         new Date(a.kickoff).getTime() - new Date(b.kickoff).getTime() ||
-        a.id - b.id
+        a.id - b.id,
     );
     // Group under date headers; insertion order is chronological.
     const byDate = new Map<string, Match[]>();
@@ -181,7 +187,7 @@ export default function PredictionForm({
           : undefined
       }
     >
-      {showReturnHints && (
+      {!forceEditable && (
         <Link href="/" className="text-sm text-blue-600 hover:underline">
           ← Back to home
         </Link>
@@ -189,22 +195,21 @@ export default function PredictionForm({
       <h1 className="mt-2 text-2xl font-bold">
         {participant.name}&apos;s predictions
       </h1>
-      <p className="mt-1 text-sm text-gray-500">
-        Group stage — predict every match before the deadline.
-      </p>
+
       {showReturnHints && (
         <p className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800">
           Your predictions are saved when you tap Save — you don&apos;t have to
-          do all {total}{" "}at once. To come back later, go to the homepage, tap
-          &quot;Edit my entry&quot; and enter your phone number to pick up
-          where you left off.
+          do all {total} at once. To come back later, go to the homepage, tap
+          &quot;Edit my entry&quot; and enter your phone number to pick up where
+          you left off.
         </p>
       )}
 
-      {locked && (
-        <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
-          The deadline has passed. Predictions are now read-only.
-        </div>
+      <br />
+      {locked && totalPoints !== null && (
+        <p className="mt-1 text-lg font-semibold text-red-700">
+          Total points: {totalPoints} pts
+        </p>
       )}
 
       {days.map(([date, dayMatches]) => (
@@ -246,6 +251,13 @@ export default function PredictionForm({
                     <TeamLabel team={match.away} flagSide="left" />
                   </span>
                 </div>
+                {locked &&
+                  match.home_score !== null &&
+                  match.away_score !== null && (
+                    <div className="mt-1 text-center text-md font-semibold text-red-400">
+                      {match.home_score}–{match.away_score}
+                    </div>
+                  )}
               </div>
             ))}
           </div>
@@ -257,14 +269,16 @@ export default function PredictionForm({
           ref={saveBarRef}
           className="fixed inset-x-0 bottom-0 border-t border-gray-200 bg-white/95 p-3 backdrop-blur"
           // Respect the iOS home-indicator safe area so the buttons aren't clipped.
-          style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
+          style={{
+            paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
+          }}
         >
           {showReturnHints && (
             <p className="mx-auto max-w-2xl pb-2 text-xs text-gray-500">
-              Your predictions are saved when you tap Save — you don&apos;t
-              have to do all {total}{" "}at once. To come back later, go to the
-              homepage, tap &quot;Edit my entry&quot; and enter your phone
-              number to pick up where you left off.
+              Your predictions are saved when you tap Save — you don&apos;t have
+              to do all {total} at once. To come back later, go to the homepage,
+              tap &quot;Edit my entry&quot; and enter your phone number to pick
+              up where you left off.
             </p>
           )}
           <div className="mx-auto flex max-w-2xl flex-wrap items-center justify-between gap-x-3 gap-y-2">

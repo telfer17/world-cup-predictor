@@ -51,12 +51,30 @@ export default async function PredictPage({
   // eslint-disable-next-line react-hooks/purity
   const locked = Date.now() >= DEADLINE.getTime();
 
+  // Running total from the single leaderboard scoring source, keyed by id
+  // (names are not unique). Only relevant once entries lock; degrade quietly
+  // if the participant_points view isn't present yet.
+  let totalPoints: number | null = null;
+  if (locked) {
+    const { data: pointsRow, error: pointsError } = await supabaseServer
+      .from("participant_points")
+      .select("points")
+      .eq("participant_id", id)
+      .maybeSingle();
+    if (pointsError) {
+      console.error("participant_points lookup failed:", pointsError.message);
+    } else {
+      totalPoints = pointsRow?.points ?? null;
+    }
+  }
+
   return (
     <PredictionForm
       participant={participant as Participant}
       matches={(matches ?? []) as Match[]}
       existing={(existing ?? []) as Prediction[]}
       locked={locked}
+      totalPoints={totalPoints}
     />
   );
 }
