@@ -89,6 +89,12 @@ export default function LeaderboardTable() {
     );
   }
 
+  // Highlight by points (not literal top-3 rows) so joint placings are all
+  // included: threshold = the 3rd-ranked entrant's points (or the last row's
+  // if fewer than 3). Highlight every row at/above it, once anyone has scored.
+  const thresholdRow = rows[Math.min(2, rows.length - 1)];
+  const highlightThreshold = thresholdRow?.points ?? 0;
+
   return (
     <div className="mt-6">
       <div className="flex items-baseline justify-between text-sm text-gray-500">
@@ -123,7 +129,9 @@ export default function LeaderboardTable() {
                 <tr
                   key={i}
                   className={`border-b border-gray-200 last:border-0 ${
-                    i < 3 ? "bg-amber-50 font-medium" : ""
+                    row.points >= highlightThreshold && row.points > 0
+                      ? "bg-amber-50 font-medium"
+                      : ""
                   }`}
                 >
                   <td className="py-2 pl-3 pr-2 tabular-nums text-gray-500 sm:pl-4">
