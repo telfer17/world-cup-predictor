@@ -38,6 +38,12 @@ export default function HomeHero() {
                 View leaderboard
               </Link>
               <FindEntryButton />
+              <Link
+                href="/grid"
+                className="rounded-md border-2 border-blue-600 px-8 py-3 text-lg font-semibold text-blue-600 hover:bg-blue-50"
+              >
+                View all picks
+              </Link>
             </div>
             <p className="mt-3 text-sm text-gray-500">
               Already entered? Pull up your predictions with your phone number
