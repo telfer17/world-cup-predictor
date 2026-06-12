@@ -76,6 +76,17 @@ export default function PredictionsGrid({
         </button>
       </div>
 
+      <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-sm bg-green-100 ring-1 ring-green-300" />
+          green = exact score
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-3 w-3 rounded-sm bg-amber-100 ring-1 ring-amber-300" />
+          yellow = correct result
+        </span>
+      </div>
+
       <div
         ref={scrollRef}
         className="overflow-auto rounded-lg border border-gray-200"
@@ -144,6 +155,15 @@ export default function PredictionsGrid({
                       hasResult &&
                       pick[0] === m.home_score &&
                       pick[1] === m.away_score;
+                    // Right winner/draw but wrong score (exact already excluded).
+                    const correctResult =
+                      !!pick &&
+                      hasResult &&
+                      !exact &&
+                      Math.sign(pick[0] - pick[1]) ===
+                        Math.sign(
+                          (m.home_score as number) - (m.away_score as number)
+                        );
                     return (
                       <td
                         key={m.id}
@@ -152,9 +172,11 @@ export default function PredictionsGrid({
                         } ${
                           exact
                             ? "bg-green-100 font-semibold text-green-800"
-                            : pick
-                              ? "text-gray-700"
-                              : "text-gray-300"
+                            : correctResult
+                              ? "bg-amber-100 font-semibold text-amber-800"
+                              : pick
+                                ? "text-gray-700"
+                                : "text-gray-300"
                         }`}
                       >
                         {pick ? `${pick[0]}-${pick[1]}` : "–"}
