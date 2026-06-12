@@ -28,6 +28,7 @@ async function allPredictions(): Promise<PredRow[]> {
     const { data, error } = await supabaseServer
       .from("predictions")
       .select("participant_id, match_id, home_pred, away_pred")
+      .order("id")
       .range(from, from + PAGE - 1)
       .returns<PredRow[]>();
     if (error) throw new Error(error.message);
