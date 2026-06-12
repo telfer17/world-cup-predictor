@@ -6,6 +6,7 @@ import { useAfterDeadline } from "@/components/useDeadline";
 const navLinks = [
   { href: "/enter", label: "Enter", hideAfterDeadline: true },
   { href: "/leaderboard", label: "Leaderboard" },
+  { href: "/grid", label: "All picks" },
   { href: "/#how-it-works", label: "How it works" },
 ];
 

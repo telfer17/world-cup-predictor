@@ -14,7 +14,10 @@ export default function LeaderboardPage() {
       <h1 className="mt-2 text-3xl font-bold tracking-tight">Leaderboard</h1>
       <p className="mt-1 text-sm text-gray-500">
         Top three win a share of the prize pot. Updates automatically during
-        matches.
+        matches.{" "}
+        <Link href="/grid" className="text-blue-600 hover:underline">
+          See everyone&apos;s picks →
+        </Link>
       </p>
       <LeaderboardTable />
     </main>
