@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { DEADLINE } from "@/lib/constants";
+import { DEADLINE, FINAL_PHASE_START } from "@/lib/constants";
 
 // One shared 1-second clock so the countdown display, the deadline flip, the
 // hero and the navbar all tick together off the single DEADLINE source of
@@ -46,6 +46,31 @@ export function useAfterDeadline(): boolean {
   return useSyncExternalStore(
     subscribe,
     () => nowSnapshot >= DEADLINE.getTime(),
+    () => false
+  );
+}
+
+/**
+ * Whether the closing stretch has started (home leads with live standings,
+ * Exact column un-hidden). Same shared clock, so it flips live. False during SSR.
+ */
+export function useAfterFinalPhase(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () => nowSnapshot >= FINAL_PHASE_START.getTime(),
+    () => false
+  );
+}
+
+/**
+ * `?preview=final` forces the closing-stretch view on any device, regardless of
+ * date. Read client-side (the URL doesn't change mid-session); false on the
+ * server so SSR/hydration stay consistent.
+ */
+export function usePreviewFinal(): boolean {
+  return useSyncExternalStore(
+    () => () => {},
+    () => new URLSearchParams(window.location.search).get("preview") === "final",
     () => false
   );
 }

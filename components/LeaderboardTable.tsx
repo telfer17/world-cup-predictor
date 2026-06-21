@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
+import { useAfterFinalPhase, usePreviewFinal } from "@/components/useDeadline";
 
 type LeaderboardRow = {
   name: string;
@@ -18,7 +19,16 @@ const updatedFormatter = new Intl.DateTimeFormat("en-GB", {
   hour12: false,
 });
 
-export default function LeaderboardTable() {
+export default function LeaderboardTable({
+  limit,
+  forceExact = false,
+}: { limit?: number; forceExact?: boolean } = {}) {
+  // Exact column is hidden until the closing stretch (same flip moment for the
+  // home snapshot and the full board). The forceExact prop (home snapshot) and
+  // ?preview=final (full board) both reveal it regardless of date.
+  const afterFinalPhase = useAfterFinalPhase();
+  const previewFinal = usePreviewFinal();
+  const showExact = afterFinalPhase || forceExact || previewFinal;
   // null = first fetch not finished yet (loading state).
   const [rows, setRows] = useState<LeaderboardRow[] | null>(null);
   const [hasResults, setHasResults] = useState(false);
@@ -95,6 +105,11 @@ export default function LeaderboardTable() {
   const thresholdRow = rows[Math.min(2, rows.length - 1)];
   const highlightThreshold = thresholdRow?.points ?? 0;
 
+  // The home snapshot shows a top-N slice; the count line still reflects the
+  // full field. Threshold above is computed from the full list, so a snapshot
+  // still highlights the right people.
+  const displayRows = limit ? rows.slice(0, limit) : rows;
+
   return (
     <div className="mt-6">
       <div className="flex items-baseline justify-between text-sm text-gray-500">
@@ -119,13 +134,22 @@ export default function LeaderboardTable() {
               <tr className="border-b border-gray-300 text-left text-xs uppercase tracking-wide text-gray-500">
                 <th className="py-2 pl-3 pr-2 font-semibold sm:pl-4">#</th>
                 <th className="py-2 pr-2 font-semibold">Name</th>
-                <th className="py-2 pr-3 text-right font-semibold sm:pr-4">
+                <th
+                  className={`py-2 text-right font-semibold ${
+                    showExact ? "pr-2" : "pr-3 sm:pr-4"
+                  }`}
+                >
                   Points
                 </th>
+                {showExact && (
+                  <th className="py-2 pr-3 text-right font-semibold sm:pr-4">
+                    Exact
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, i) => (
+              {displayRows.map((row, i) => (
                 <tr
                   key={i}
                   className={`border-b border-gray-200 last:border-0 ${
@@ -138,9 +162,18 @@ export default function LeaderboardTable() {
                     {i + 1}
                   </td>
                   <td className="py-2 pr-2">{row.name}</td>
-                  <td className="py-2 pr-3 text-right tabular-nums font-semibold sm:pr-4">
+                  <td
+                    className={`py-2 text-right tabular-nums font-semibold ${
+                      showExact ? "pr-2" : "pr-3 sm:pr-4"
+                    }`}
+                  >
                     {row.points}
                   </td>
+                  {showExact && (
+                    <td className="py-2 pr-3 text-right tabular-nums text-gray-500 sm:pr-4">
+                      {row.exact_scores}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
