@@ -12,6 +12,15 @@ type LeaderboardRow = {
 
 const REFRESH_MS = 60_000;
 
+// Gold / silver / bronze row tint for places 1–3. Black row text stays
+// readable on all three, and they read apart from each other and from the
+// green/amber used on the picks grid.
+const MEDALS: Record<number, string> = {
+  1: "bg-[#ffd100]", // gold
+  2: "bg-[#d6d6d6]", // silver
+  3: "bg-[#cb8c47]", // bronze
+};
+
 const updatedFormatter = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
   minute: "2-digit",
@@ -99,15 +108,22 @@ export default function LeaderboardTable({
     );
   }
 
-  // Highlight by points (not literal top-3 rows) so joint placings are all
-  // included: threshold = the 3rd-ranked entrant's points (or the last row's
-  // if fewer than 3). Highlight every row at/above it, once anyone has scored.
-  const thresholdRow = rows[Math.min(2, rows.length - 1)];
-  const highlightThreshold = thresholdRow?.points ?? 0;
+  // Medals by PLACE via standard competition ranking ("1-2-2-4") over the sort
+  // key (points desc, then exact_scores desc): same points AND same exact_scores
+  // share a place; the next place skips. Computed over the full field so a
+  // top-N snapshot still medals the right rows.
+  const placeOf: number[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    placeOf[i] =
+      i > 0 &&
+      rows[i].points === rows[i - 1].points &&
+      rows[i].exact_scores === rows[i - 1].exact_scores
+        ? placeOf[i - 1]
+        : i + 1;
+  }
 
   // The home snapshot shows a top-N slice; the count line still reflects the
-  // full field. Threshold above is computed from the full list, so a snapshot
-  // still highlights the right people.
+  // full field. Slice keeps the same indices, so placeOf lines up.
   const displayRows = limit ? rows.slice(0, limit) : rows;
 
   return (
@@ -149,33 +165,41 @@ export default function LeaderboardTable({
               </tr>
             </thead>
             <tbody>
-              {displayRows.map((row, i) => (
-                <tr
-                  key={i}
-                  className={`border-b border-gray-200 last:border-0 ${
-                    row.points >= highlightThreshold && row.points > 0
-                      ? "bg-amber-50 font-medium"
-                      : ""
-                  }`}
-                >
-                  <td className="py-2 pl-3 pr-2 tabular-nums text-gray-500 sm:pl-4">
-                    {i + 1}
-                  </td>
-                  <td className="py-2 pr-2">{row.name}</td>
-                  <td
-                    className={`py-2 text-right tabular-nums font-semibold ${
-                      showExact ? "pr-2" : "pr-3 sm:pr-4"
+              {displayRows.map((row, i) => {
+                // Only places 1–3 with a score get a medal.
+                const medal =
+                  row.points > 0 ? MEDALS[placeOf[i]] : undefined;
+                return (
+                  <tr
+                    key={i}
+                    className={`border-b border-gray-200 last:border-0 ${
+                      medal ? `${medal} font-medium` : ""
                     }`}
                   >
-                    {row.points}
-                  </td>
-                  {showExact && (
-                    <td className="py-2 pr-3 text-right tabular-nums text-gray-500 sm:pr-4">
-                      {row.exact_scores}
+                    <td className="py-2 pl-3 pr-2 tabular-nums sm:pl-4">
+                      {/* Intentional (product decision): # is row position
+                          (1,2,3,4), NOT competition rank. The tie-aware place
+                          lives in placeOf[i] and is shown via the medals.
+                          Competition-rank numbering ("1,1,3") was considered
+                          and parked — don't "fix" this to placeOf[i]. */}
+                      {i + 1}
                     </td>
-                  )}
-                </tr>
-              ))}
+                    <td className="py-2 pr-2">{row.name}</td>
+                    <td
+                      className={`py-2 text-right tabular-nums font-semibold ${
+                        showExact ? "pr-2" : "pr-3 sm:pr-4"
+                      }`}
+                    >
+                      {row.points}
+                    </td>
+                    {showExact && (
+                      <td className="py-2 pr-3 text-right tabular-nums sm:pr-4">
+                        {row.exact_scores}
+                      </td>
+                    )}
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
