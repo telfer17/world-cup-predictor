@@ -177,6 +177,11 @@ export default function LeaderboardTable({
                     }`}
                   >
                     <td className="py-2 pl-3 pr-2 tabular-nums sm:pl-4">
+                      {/* Intentional (product decision): # is row position
+                          (1,2,3,4), NOT competition rank. The tie-aware place
+                          lives in placeOf[i] and is shown via the medals.
+                          Competition-rank numbering ("1,1,3") was considered
+                          and parked — don't "fix" this to placeOf[i]. */}
                       {i + 1}
                     </td>
                     <td className="py-2 pr-2">{row.name}</td>
