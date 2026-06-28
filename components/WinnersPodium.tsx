@@ -98,13 +98,19 @@ export default function WinnersPodium() {
                 {byPlace.get(place)!.map((entry) => (
                   <li
                     key={entry.name}
-                    className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-gray-900"
+                    // Shared column template so "points · exact" starts at the
+                    // same x and the prize stays hard right on every row. On
+                    // mobile the name takes its own line (no truncation); the
+                    // aligned points·exact / prize row sits beneath.
+                    className="grid grid-cols-[1fr_auto] items-baseline gap-x-3 gap-y-0.5 text-gray-900 sm:grid-cols-[minmax(0,1fr)_9rem_4.5rem]"
                   >
-                    <span className="text-lg font-bold">{entry.name}</span>
+                    <span className="col-span-2 text-lg font-bold sm:col-span-1 sm:min-w-0 sm:truncate">
+                      {entry.name}
+                    </span>
                     <span className="text-sm tabular-nums">
                       {entry.points} pts · {entry.exact_scores} exact
                     </span>
-                    <span className="w-full text-right text-lg font-bold tabular-nums sm:w-auto">
+                    <span className="text-right text-lg font-bold tabular-nums">
                       {formatPrize(entry.prize)}
                     </span>
                   </li>
