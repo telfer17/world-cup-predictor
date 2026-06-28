@@ -3,23 +3,11 @@
 import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase-browser";
 import { useAfterFinalPhase, usePreviewFinal } from "@/components/useDeadline";
+import { computePlaces, MEDAL_TINTS, type StandingRow } from "@/lib/standings";
 
-type LeaderboardRow = {
-  name: string;
-  points: number;
-  exact_scores: number;
-};
+type LeaderboardRow = StandingRow;
 
 const REFRESH_MS = 60_000;
-
-// Gold / silver / bronze row tint for places 1–3. Black row text stays
-// readable on all three, and they read apart from each other and from the
-// green/amber used on the picks grid.
-const MEDALS: Record<number, string> = {
-  1: "bg-[#ffd100]", // gold
-  2: "bg-[#d6d6d6]", // silver
-  3: "bg-[#cb8c47]", // bronze
-};
 
 const updatedFormatter = new Intl.DateTimeFormat("en-GB", {
   hour: "2-digit",
@@ -108,19 +96,9 @@ export default function LeaderboardTable({
     );
   }
 
-  // Medals by PLACE via standard competition ranking ("1-2-2-4") over the sort
-  // key (points desc, then exact_scores desc): same points AND same exact_scores
-  // share a place; the next place skips. Computed over the full field so a
-  // top-N snapshot still medals the right rows.
-  const placeOf: number[] = [];
-  for (let i = 0; i < rows.length; i++) {
-    placeOf[i] =
-      i > 0 &&
-      rows[i].points === rows[i - 1].points &&
-      rows[i].exact_scores === rows[i - 1].exact_scores
-        ? placeOf[i - 1]
-        : i + 1;
-  }
+  // Medals by PLACE via standard competition ranking ("1-2-2-4"). Computed over
+  // the full field so a top-N snapshot still medals the right rows.
+  const placeOf = computePlaces(rows);
 
   // The home snapshot shows a top-N slice; the count line still reflects the
   // full field. Slice keeps the same indices, so placeOf lines up.
@@ -168,7 +146,7 @@ export default function LeaderboardTable({
               {displayRows.map((row, i) => {
                 // Only places 1–3 with a score get a medal.
                 const medal =
-                  row.points > 0 ? MEDALS[placeOf[i]] : undefined;
+                  row.points > 0 ? MEDAL_TINTS[placeOf[i]] : undefined;
                 return (
                   <tr
                     key={i}
