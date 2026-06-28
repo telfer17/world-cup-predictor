@@ -74,3 +74,13 @@ export function usePreviewFinal(): boolean {
     () => false
   );
 }
+
+/** `?preview=winners` previews the final winners podium without deploying. */
+export function usePreviewWinners(): boolean {
+  return useSyncExternalStore(
+    () => () => {},
+    () =>
+      new URLSearchParams(window.location.search).get("preview") === "winners",
+    () => false
+  );
+}
